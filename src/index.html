@@ -1,9 +1,31 @@
 <!DOCTYPE html>
 <html lang="en">
   <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>The Weather</title>
   </head>
-  <body></body>
+  <body>
+    <div class="main-content">
+      <div class="top">
+        <div class="search">
+          <form id="location-search" action="">
+            <input name="location" type="text" />
+          </form>
+        </div>
+        <div class="current deg-c">
+          <h3>Current weather for</h3>
+          <div class="location-display"></div>
+          <div class="current__temp">
+            <span class="degrees"></span><span class="unit">°C</span>
+          </div>
+        </div>
+      </div>
+      <div class="middle">
+        <div class="forecast">
+          <p>Forecast goes here</p>
+        </div>
+      </div>
+    </div>
+  </body>
 </html>
