@@ -60,11 +60,10 @@ async function updateDisplay(processedData) {
   locationDisplay.textContent = `${data.location.name}, ${data.location.country}`;
 }
 
-const cleanData = getForecastData().then((data) => processForecastData(data));
-cleanData.then((data) => {
-  console.log(data);
-  updateDisplay(data);
-});
+const forecastData = await getForecastData();
+const cleanData = await processForecastData(forecastData);
+console.log(cleanData);
+updateDisplay(cleanData);
 
 locationSearch.addEventListener('submit', async (e) => {
   e.preventDefault();
