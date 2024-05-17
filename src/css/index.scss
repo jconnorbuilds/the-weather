@@ -1,4 +1,6 @@
 @import './reset.css';
+@import './weather-icons-wind.min.css';
+@import './weather-icons.min.css';
 
 body {
   background-color: #112;
@@ -39,14 +41,13 @@ input[type='text'] {
   align-items: center;
   justify-content: center;
 
-  .current__temp {
+  .current__weather {
     font-size: 4rem;
-
-    .unit {
-      font-size: 3rem;
-      // vertical-align: text-top;
-    }
   }
+}
+.deg-unit {
+  font-size: 0.75em;
+  // vertical-align: text-top;
 }
 
 .middle {

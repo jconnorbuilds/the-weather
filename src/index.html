@@ -10,14 +10,21 @@
       <div class="top">
         <div class="search">
           <form id="location-search" action="">
-            <input name="location" type="text" />
+            <input name="location" type="text" placeholder="Search..." />
           </form>
         </div>
-        <div class="current deg-c">
+        <div class="current weather-card deg-c">
           <h3>Current weather for</h3>
           <div class="location-display"></div>
-          <div class="current__temp">
-            <span class="degrees"></span><span class="unit">°C</span>
+          <div class="current__weather">
+            <span class="condition-icon"></span>
+            <span class="degrees"></span><span class="deg-unit"></span>
+          </div>
+          <div class="current__lo-temp">
+            <span class="degrees"></span><span class="deg-unit"></span>
+          </div>
+          <div class="current__hi-temp">
+            <span class="degrees"></span><span class="deg-unit"></span>
           </div>
         </div>
       </div>
