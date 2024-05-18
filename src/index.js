@@ -8,7 +8,7 @@ const locationSearch = document.querySelector('form#location-search');
 // Get the total data from the API
 async function getForecastData(query = 'Yonezawa') {
   const response = await fetch(
-    `${BASE_URL}/forecast.json?key=${API_KEY}&q=${query}&days=3`,
+    `${BASE_URL}/forecast.json?key=${API_KEY}&q=${query}&days=5`,
     {
       mode: 'cors',
     },

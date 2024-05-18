@@ -52,36 +52,67 @@ input[type='text'] {
 }
 
 .middle {
-  display: flex;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
   align-items: center;
   justify-content: center;
 }
 
 .forecast {
-  display: flex;
+  display: grid;
+  padding: 1rem;
+  flex-direction: column;
+  width: 100%;
 
-  .weather-card {
-    display: flex;
-    flex-direction: column;
+  .day {
+    display: grid;
+    grid-template-columns: 8ch auto 9ch 1fr 10ch;
     align-items: center;
+    justify-content: start;
+    gap: 2rem;
     padding: 1rem;
-    border: solid 1px white;
 
     .date {
       font-size: 1.5rem;
-      padding-bottom: 0.5em;
     }
 
     .condition-icon {
       font-size: 2.5rem;
     }
-
-    .temp {
-      display: flex;
-      // flex-direction: row;
-      // flex: 1 1 auto;
-      gap: 2em;
-      justify-content: space-between;
+    .degrees {
+      justify-self: center;
     }
+  }
+}
+
+.temperature-bar-wrapper {
+  position: relative;
+  height: 10px;
+  border-radius: 10px;
+  overflow: hidden;
+
+  // background-color: #333;
+
+  .temperature-bar {
+    display: flex;
+    // position: absolute;
+    content: '';
+    width: 100%;
+    height: 10px;
+    border-radius: 10px;
+  }
+
+  .temperature-bar-mask {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+  }
+}
+
+.forecast {
+  .degrees {
+    font-size: 1.5rem;
   }
 }
