@@ -5,7 +5,7 @@ const todayLoTemp = document.querySelector('.current__lo-temp .degrees');
 const todayHiTemp = document.querySelector('.current__hi-temp .degrees');
 
 /**
- * https://erikflowers.github.io/weather-icons/
+ * Icons from https://erikflowers.github.io/weather-icons/
  */
 const WEATHER_ICON_CLASSES = {
   1000: { day: 'wi wi-day-sunny', night: 'wi wi-night-clear' },
@@ -58,8 +58,8 @@ function getConditionIcon(code, isDay = 1) {
   return icon;
 }
 
-export async function updateDisplayCurrent(data) {
-  console.log(data);
+export function updateDisplayCurrent(data) {
+  console.log('🚀 ~ updateDisplayCurrent ~ data:', data);
   currentTempDegrees.textContent = data.current.temp_c;
   todayLoTemp.textContent = data.forecast[0].mintemp_c;
   todayHiTemp.textContent = data.forecast[0].maxtemp_c;
@@ -73,4 +73,28 @@ export async function updateDisplayCurrent(data) {
   );
 }
 
-export async function updateDisplayForecast(data) {}
+export function updateDisplayForecast(data) {
+  console.log('ive been called');
+  const container = document.querySelector('.forecast');
+  data.forecast.forEach((day) => {
+    console.log('day');
+    const card = document.createElement('div');
+    card.innerHTML = `
+    <div class="weather-card">
+            <div class="date">May 18</div>
+            <span class="condition-icon">
+              <i class="wi wi-day-sunny"></i>
+            </span>
+            <div class="temp">
+              <div class="lo-temp">
+                <span class="degrees">9</span><span class="deg-unit">°C</span>
+              </div>
+              <div class="hi-temp">
+                <span class="degrees">25</span><span class="deg-unit">°C</span>
+              </div>
+            </div>
+          </div>
+    `;
+    container.append(card);
+  });
+}

@@ -1,5 +1,5 @@
 import './css/index.scss';
-import { updateDisplayCurrent } from './ui.js';
+import { updateDisplayCurrent, updateDisplayForecast } from './ui.js';
 
 const API_KEY = '35c70887ef254533935103759241405';
 const BASE_URL = 'http://api.weatherapi.com/v1';
@@ -15,7 +15,7 @@ async function getForecastData(query = 'Yonezawa') {
   );
 
   const allForecastData = await response.json();
-  console.log(allForecastData);
+  console.log('🚀 ~ getForecastData ~ allForecastData:', allForecastData);
   return allForecastData;
 }
 
@@ -53,15 +53,15 @@ async function processForecastData(data) {
 
 const forecastData = await getForecastData();
 const cleanData = await processForecastData(forecastData);
-console.log(cleanData);
 updateDisplayCurrent(cleanData);
+updateDisplayForecast(cleanData);
 
 locationSearch.addEventListener('submit', async (e) => {
   e.preventDefault();
   const locationField = e.target.elements.location;
   const forecastData = await getForecastData(locationField.value);
   const cleanData = await processForecastData(forecastData);
-  updateDisplayCurrent(cleanData);
-});
 
-// Return low temp, hi temp, precip %, icon
+  updateDisplayCurrent(cleanData);
+  updateDisplayForecast(cleanData);
+});
