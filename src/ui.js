@@ -110,7 +110,7 @@ export function updateDisplayForecast(data) {
 }
 
 class TemperatureBar {
-  static abs_max_temp_c = 45;
+  static abs_max_temp_c = 40;
   static abs_min_temp_c = -5;
   static unit = 'c';
   constructor(temperatureData, loTemp, hiTemp) {
@@ -124,19 +124,55 @@ class TemperatureBar {
     this.mask.classList.add('temperature-bar-mask');
 
     this.wrapper.append(this.main);
-    this.wrapper.append(this.mask);
 
     this.max_temp_c = Math.max(...temperatureData);
     this.min_temp_c = Math.min(...temperatureData);
   }
 
+  /**
+   * Draws a temperature bar with a gradient that spans the max range of temperatures.
+   */
   draw() {
     this.main.style.backgroundImage = this.getGradient();
+    this.main.style.clipPath = this.getClipPath();
+    return this.wrapper.outerHTML;
+  }
+
+  /**
+   * Draws a temperature bar with a gradient that represents the
+   * min and max temperatures for the visible forecast.
+   */
+  drawType2() {
+    this.main.style.backgroundImage = this.getGradientType2();
     this.mask.style.backgroundImage = this.getMask();
+    this.wrapper.append(this.mask);
     return this.wrapper.outerHTML;
   }
 
   getGradient() {
+    const hotHueValue = 28;
+    const middleHueValue = 144;
+    const coldHueValue = 206;
+    const gradient = `linear-gradient(
+      90deg in oklch,
+      oklch(60% 0.44 ${coldHueValue}) 0%, oklch(97% 0.27 ${middleHueValue}) 54% 54%, oklch(80% 0.34 ${hotHueValue}) 100%
+    )`;
+    return gradient;
+  }
+
+  getClipPath() {
+    const scaleLength = TemperatureBar.abs_max_temp_c - TemperatureBar.abs_min_temp_c;
+    const startPercent =
+      ((this.loTemp - TemperatureBar.abs_min_temp_c) / scaleLength) * 100;
+    const endPercent =
+      ((this.hiTemp - TemperatureBar.abs_min_temp_c) / scaleLength) * 100;
+    const clipPath = `rect(0 ${endPercent}% 10px ${startPercent}% round 2.5px)`;
+
+    console.log('🚀 ~ TemperatureBar ~ getClipPath ~ clipPath:', clipPath);
+    return clipPath;
+  }
+
+  getGradientType2() {
     const maxHueValue = 220; // OKLCH red
     const minHueValue = 30; // OKLCH light blue
     const scaleLength = TemperatureBar.abs_max_temp_c - TemperatureBar.abs_min_temp_c; // 50
