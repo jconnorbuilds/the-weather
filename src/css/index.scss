@@ -66,18 +66,18 @@ input[type='text'] {
 
   .day {
     display: grid;
-    grid-template-columns: 8ch auto 9ch 1fr 10ch;
+    grid-template-columns: 8ch 5ch 9ch 1fr 10ch;
     align-items: center;
     justify-content: start;
-    gap: 2rem;
+    gap: 1rem;
     padding: 0.5rem;
 
     .date {
-      font-size: 1.5rem;
+      font-size: 1.2rem;
     }
 
     .condition-icon {
-      font-size: 2.5rem;
+      font-size: 2rem;
     }
     .degrees {
       justify-self: center;
@@ -111,6 +111,6 @@ input[type='text'] {
 
 .forecast {
   .degrees {
-    font-size: 1.5rem;
+    font-size: 1.2rem;
   }
 }
