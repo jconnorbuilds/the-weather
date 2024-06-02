@@ -3,11 +3,11 @@ import { WEATHER_ICON_CLASSES } from './WEATHER_ICON_CLASSES';
 import bgImgDay from './img/daydrawing.png';
 import bgImgNight from './img/nightdrawing.png';
 
-const currentTempDegrees = document.querySelector('.current__weather .degrees');
+const currentTempDegrees = document.querySelector('.current-weather .degrees');
 const locationDisplay = document.querySelector('.location-display .location');
-const todayLoTemp = document.querySelector('.current__temp-range .lo-temp .degrees');
-const todayHiTemp = document.querySelector('.current__temp-range .hi-temp .degrees');
-const currentUnit = '°C';
+const todayLoTemp = document.querySelector('.current-temp-range .lo-temp .degrees');
+const todayHiTemp = document.querySelector('.current-temp-range .hi-temp .degrees');
+const currentUnit = 'c';
 
 function getConditionIcon(code, isDay = 1) {
   let icon = document.createElement('i');
@@ -88,10 +88,10 @@ export function updateDisplayForecast(data) {
     container.innerHTML += `
     <div class="day">
       <div class="date">
-        <div class="date__weekday">${date.toLocaleDateString('en-US', {
+        <div class="weekday">${date.toLocaleDateString('en-US', {
           weekday: 'short',
         })}</div>
-        <div class="date__cal-date">${date.toLocaleDateString('en-US', {
+        <div class="cal-date">${date.toLocaleDateString('en-US', {
           month: 'short',
           day: 'numeric',
         })}</div>

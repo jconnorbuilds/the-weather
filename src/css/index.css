@@ -1,10 +1,9 @@
-@import './reset.css';
-@import './weather-icons-wind.min.css';
-@import './weather-icons.min.css';
+@import url('./reset.css');
+@import url('./weather-icons-wind.min.css');
+@import url('./weather-icons.min.css');
 
 body {
-  background-color: rgb(17, 17, 34);
-
+  background-color: rgb(17 17 34);
   color: #eee;
   font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen,
     Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
@@ -13,7 +12,7 @@ body {
 
 input {
   border: none;
-  border-radius: 5px 0 0 0;
+  border-radius: 5px 0 0;
 }
 
 input[type='text'] {
@@ -26,17 +25,15 @@ input[type='text'] {
 
 .main-content {
   height: 100%;
-  background-color: rgb(17 17 34 / 0.9);
+  background-color: rgb(17 17 34 / 90%);
   display: grid;
   grid-template-rows: minmax(min-content, 1fr) 1fr;
   padding: 1em;
 }
 
 .top-wrapper {
-  // background-image: url('../img/nightdrawing.png');
-  // background-image: url('../img/daydrawing.png');
   background-size: cover;
-  background-position: bottom 85% left 0px;
+  background-position: bottom 85% left 0;
   overflow: hidden;
   border: 1px solid #eee;
   border-radius: 20px;
@@ -49,8 +46,7 @@ input[type='text'] {
   flex-direction: column;
   justify-content: space-between;
   gap: 2em;
-  background-color: rgb(17 17 34 / 0.4);
-
+  background-color: rgb(17 17 34 / 40%);
   height: 100%;
   padding: 1em;
   backdrop-filter: blur(8px);
@@ -67,18 +63,18 @@ input[type='text'] {
       align-items: flex-start;
       justify-content: flex-end;
 
-      .current__weather {
+      .current-weather {
         font-size: 4rem;
         display: flex;
         gap: 1rem;
 
-        .current__temp {
+        .current-temp {
           display: flex;
           flex-direction: row;
           align-items: center;
         }
 
-        .current__temp-range {
+        .current-temp-range {
           display: grid;
           grid-template-rows: 1fr 1fr;
           font-size: 1.5rem;
@@ -93,7 +89,7 @@ input[type='text'] {
     gap: 1em;
     max-height: max-content;
     overflow: auto;
-    scrollbar-color: rgb(200 200 200 / 0.2) rgb(0 0 0 / 0);
+    scrollbar-color: rgb(200 200 200 / 20%) rgb(0 0 0 / 0%);
 
     .card {
       display: flex;
@@ -101,15 +97,15 @@ input[type='text'] {
       align-items: center;
       flex: 1 0 initial;
       white-space: nowrap;
-
       padding: 0.5rem 2rem;
       border-radius: 10px;
-      background-color: rgb(255 255 255 / 0.2);
-      box-shadow: 2px 0 2px rgb(0 0 0 / 0.3);
+      background-color: rgb(255 255 255 / 20%);
+      box-shadow: 2px 0 2px rgb(0 0 0 / 30%);
 
       .hr-condition {
         font-size: 2rem;
       }
+
       .hr-temp .temp {
         font-size: 1.5rem;
       }
@@ -133,6 +129,7 @@ input[type='text'] {
 
 .forecast {
   display: grid;
+  padding: 1rem;
   flex-direction: column;
   width: 100%;
 
@@ -147,49 +144,44 @@ input[type='text'] {
     .date {
       display: grid;
 
-      .date__weekday {
-        font-size: 0.8rem;
+      .weekday {
+        font-size .cal-date {
+          font-size: 1.2rem;
+        }
       }
-      .date__cal-date {
+
+      .condition-icon {
+        font-size: 2rem;
+      }
+
+      .degrees {
+        justify-self: center;
         font-size: 1.2rem;
       }
     }
-
-    .condition-icon {
-      font-size: 2rem;
-    }
-    .degrees {
-      justify-self: center;
-    }
   }
-}
 
-.temperature-bar-wrapper {
-  position: relative;
-  height: 10px;
-  border-radius: 3px;
-  background-color: #444;
-  overflow: hidden;
-
-  .temperature-bar {
-    display: flex;
-    content: '';
-    width: 100%;
+  .temperature-bar-wrapper {
+    position: relative;
     height: 10px;
     border-radius: 3px;
-  }
+    background-color: #444;
+    overflow: hidden;
 
-  .temperature-bar-mask {
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-  }
-}
+    .temperature-bar {
+      display: flex;
+      content: '';
+      width: 100%;
+      height: 10px;
+      border-radius: 3px;
+    }
 
-.forecast {
-  .degrees {
-    font-size: 1.2rem;
+    .temperature-bar-mask {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+    }
   }
 }
