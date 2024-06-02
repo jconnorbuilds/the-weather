@@ -1,5 +1,9 @@
 import './css/index.scss';
-import { updateDisplayCurrent, updateDisplayForecast } from './ui.js';
+import {
+  updateDisplayCurrent,
+  updateDisplayHourly,
+  updateDisplayForecast,
+} from './ui.js';
 
 const API_KEY = '35c70887ef254533935103759241405';
 const BASE_URL = 'http://api.weatherapi.com/v1';
@@ -21,7 +25,7 @@ async function getForecastData(query = 'Yonezawa') {
 
 // Process the data to retrieve what needs to be displayed
 async function processForecastData(data) {
-  let processedData = { current: {}, forecast: [], location: {} };
+  let processedData = { current: {}, hourly: '', forecast: [], location: {} };
 
   // Get the current conditions to be displayed
   const keysCurrent = ['condition', 'is_day', 'temp_c', 'temp_f'];
@@ -48,12 +52,15 @@ async function processForecastData(data) {
     processedData.forecast.push(forecastData);
   });
 
+  processedData.hourly = forecastDays[0].hour;
+
   return processedData;
 }
 
 const forecastData = await getForecastData();
 const cleanData = await processForecastData(forecastData);
 updateDisplayCurrent(cleanData);
+updateDisplayHourly(cleanData);
 updateDisplayForecast(cleanData);
 
 locationSearch.addEventListener('submit', async (e) => {
@@ -63,5 +70,6 @@ locationSearch.addEventListener('submit', async (e) => {
   const cleanData = await processForecastData(forecastData);
 
   updateDisplayCurrent(cleanData);
+  updateDisplayHourly(cleanData);
   updateDisplayForecast(cleanData);
 });

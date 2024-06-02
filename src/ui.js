@@ -1,9 +1,10 @@
 import { TemperatureBar } from './TemperatureBar';
 import { WEATHER_ICON_CLASSES } from './WEATHER_ICON_CLASSES';
+import bgImgDay from './img/daydrawing.png';
+import bgImgNight from './img/nightdrawing.png';
 
 const currentTempDegrees = document.querySelector('.current__weather .degrees');
-const tempUnitDisplay = document.querySelectorAll('.deg-unit');
-const locationDisplay = document.querySelector('.location-display');
+const locationDisplay = document.querySelector('.location-display .location');
 const todayLoTemp = document.querySelector('.current__temp-range .lo-temp .degrees');
 const todayHiTemp = document.querySelector('.current__temp-range .hi-temp .degrees');
 const currentUnit = '°C';
@@ -16,21 +17,62 @@ function getConditionIcon(code, isDay = 1) {
 }
 
 export function updateDisplayCurrent(data) {
+  const bgImgWrapper = document.querySelector('.top-wrapper');
   console.log('🚀 ~ updateDisplayCurrent ~ data:', data);
-  currentTempDegrees.textContent = data.current.temp_c;
-  todayLoTemp.textContent = data.forecast[0].mintemp_c;
-  todayHiTemp.textContent = data.forecast[0].maxtemp_c;
+  currentTempDegrees.textContent = `${data.current.temp_c}°`;
+  todayLoTemp.textContent = `L: ${data.forecast[0].mintemp_c}°`;
+  todayHiTemp.textContent = `H: ${data.forecast[0].maxtemp_c}°`;
   locationDisplay.textContent = `${data.location.name}, ${data.location.country}`;
-  tempUnitDisplay.forEach((el) => (el.textContent = '°C'));
 
   const iconContainer = document.querySelector('.weather-card .condition-icon');
   iconContainer.querySelector('i')?.remove();
   iconContainer.append(
     getConditionIcon(data.current.condition.code, data.current.is_day),
   );
+
+  bgImgWrapper.style.backgroundImage =
+    data.current.is_day === 1 ? `url(${bgImgDay})` : `url(${bgImgNight})`;
 }
 
-export function updateDisplayHourly(data) {}
+function drawHourlyCard(hourData) {
+  const card = document.createElement('div');
+  card.classList.add('hr', 'card');
+  card.innerHTML = `
+    <div class="time">${new Date(hourData.time).toLocaleTimeString('en-US', {
+      hour: 'numeric',
+    })}</div>
+    <div class="hr-condition">
+      ${getConditionIcon(hourData.condition.code, hourData.is_day).outerHTML}
+    </div>
+    <div class="hr-temp">
+      <span class="temp">${hourData.temp_c}°</span>
+    </div>
+    <div class="precip-chance">
+      <i class="wi wi-raindrop"></i>
+      <span>${Math.max(hourData.chance_of_rain, hourData.chance_of_snow)}%</span>
+    </div>
+    
+    `;
+  return card;
+}
+
+export function updateDisplayHourly(data) {
+  const hourlyData = data.hourly;
+  console.log('🚀 ~ updateDisplayHourly ~ data:', data);
+  const container = document.querySelector('.fc-hourly');
+  container.textContent = '';
+
+  let currentHour = data.location.localtime.split(' ')[1].split(':')[0];
+  const sortedData = [
+    ...hourlyData.slice(currentHour, 24),
+    ...hourlyData.slice(0, currentHour),
+  ];
+
+  sortedData.forEach((hour) => {
+    const card = drawHourlyCard(hour);
+    container.append(card);
+  });
+}
 
 export function updateDisplayForecast(data) {
   console.log('🚀 ~ updateDisplayForecast ~ data:', data);
@@ -58,15 +100,11 @@ export function updateDisplayForecast(data) {
         ${getConditionIcon(day.condition.code).outerHTML}
       </span>
       <div class="temperature lo-temp">
-        <span class="degrees">L: ${
-          day.mintemp_c
-        }</span><span class="deg-unit">${currentUnit}</span>
+        L: ${day.mintemp_c}°
       </div>
       ${new TemperatureBar(temperatureData, day.mintemp_c, day.maxtemp_c).draw()}
       <div class="temperature hi-temp">
-        <span class="degrees">H: ${
-          day.maxtemp_c
-        }</span><span class="deg-unit">${currentUnit}</span>
+        H: ${day.maxtemp_c}°
       </div>
       </div>
     </div>

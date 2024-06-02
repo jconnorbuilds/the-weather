@@ -3,6 +3,8 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <script src="https://kit.fontawesome.com/3bfcb4bec9.js"
+            crossorigin="anonymous"></script>
     <title>The Weather</title>
   </head>
   <body>
@@ -14,28 +16,32 @@
               <input name="location" type="text" placeholder="Search..." />
             </form>
           </div>
-          <div class="current weather-card deg-c">
-            <h3>Currently</h3>
-            <div class="current__weather">
-              <div class="current__temp">
+          <div class="fc-today">
+            <div class="fc-current weather-card deg-c">
+              <h3>Currently</h3>
+              <div class="current__weather">
                 <span class="condition-icon"></span>
-                <span class="degrees"></span><span class="deg-unit"></span>
+                <div class="current__temp">
+                  <span class="degrees"></span>
+                </div>
+                <div class="current__temp-range">
+                  <div class="lo-temp">
+                    <span class="degrees"></span>
+                  </div>
+                  <div class="hi-temp">
+                    <span class="degrees"></span>
+                  </div>
+                </div>
               </div>
-              <div class="current__temp-range">
-                <div class="lo-temp">
-                  <span class="degrees"></span><span class="deg-unit"></span>
-                </div>
-                <div class="hi-temp">
-                  <span class="degrees"></span><span class="deg-unit"></span>
-                </div>
+              <div class="location-display">
+                <i class="fa-solid fa-location-dot"></i>
+                <span class="location"></span>
               </div>
             </div>
-
-            <div class="location-display"></div>
+            <div class="fc-hourly"></div>
           </div>
         </div>
       </div>
-
       <div class="middle">
         <div class="other-stuff"></div>
         <div class="five-day-forecast">

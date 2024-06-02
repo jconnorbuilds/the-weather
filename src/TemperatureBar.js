@@ -59,7 +59,6 @@ export class TemperatureBar {
       ((this.hiTemp - TemperatureBar.abs_min_temp_c) / scaleLength) * 100;
     const clipPath = `rect(0 ${endPercent}% 10px ${startPercent}% round 2.5px)`;
 
-    console.log('🚀 ~ TemperatureBar ~ getClipPath ~ clipPath:', clipPath);
     return clipPath;
   }
 
