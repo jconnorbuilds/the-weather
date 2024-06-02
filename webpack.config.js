@@ -1,5 +1,6 @@
 const path = require('path');
 const HTMLWebpackPlugin = require('html-webpack-plugin');
+const StylelintPlugin = require('stylelint-webpack-plugin');
 
 module.exports = {
   mode: 'development',
@@ -10,9 +11,9 @@ module.exports = {
   },
   devtool: 'inline-source-map',
   devServer: {
-    static: './dist',
-    hot: true,
-    watchFiles: ['./src/**/*.html', './src/**/*.**css'],
+    static: {
+      directory: path.join(__dirname, './src/assets'),
+    },
   },
   module: {
     rules: [
@@ -32,7 +33,8 @@ module.exports = {
   },
   plugins: [
     new HTMLWebpackPlugin({
-      template: './src/index.html',
+      template: './src/assets/index.html',
     }),
+    new StylelintPlugin({ exclude: ['**/weather-icons**'] }),
   ],
 };

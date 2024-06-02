@@ -8,9 +8,10 @@ import {
 const API_KEY = '35c70887ef254533935103759241405';
 const BASE_URL = 'http://api.weatherapi.com/v1';
 const locationSearch = document.querySelector('form#location-search');
+const loadingSpinner = document.querySelector('#loader');
 
 // Get the total data from the API
-async function getForecastData(query = 'Yonezawa') {
+async function getForecastData(query) {
   const response = await fetch(
     `${BASE_URL}/forecast.json?key=${API_KEY}&q=${query}&days=5`,
     {
@@ -57,19 +58,26 @@ async function processForecastData(data) {
   return processedData;
 }
 
-const forecastData = await getForecastData();
-const cleanData = await processForecastData(forecastData);
-updateDisplayCurrent(cleanData);
-updateDisplayHourly(cleanData);
-updateDisplayForecast(cleanData);
+async function getAndDisplayWeather(query) {
+  try {
+    loadingSpinner.classList.remove('hidden');
+    const forecastData = await getForecastData(query);
+    const cleanData = await processForecastData(forecastData);
+
+    updateDisplayCurrent(cleanData);
+    updateDisplayHourly(cleanData);
+    updateDisplayForecast(cleanData);
+
+    loadingSpinner.classList.add('hidden');
+  } catch (error) {
+    console.error('Error getting the data...!', error);
+  }
+}
 
 locationSearch.addEventListener('submit', async (e) => {
   e.preventDefault();
   const locationField = e.target.elements.location;
-  const forecastData = await getForecastData(locationField.value);
-  const cleanData = await processForecastData(forecastData);
-
-  updateDisplayCurrent(cleanData);
-  updateDisplayHourly(cleanData);
-  updateDisplayForecast(cleanData);
+  getAndDisplayWeather(locationField.value);
 });
+
+getAndDisplayWeather('Yonezawa');

@@ -2,6 +2,7 @@ import { TemperatureBar } from './TemperatureBar';
 import { WEATHER_ICON_CLASSES } from './WEATHER_ICON_CLASSES';
 import bgImgDay from './img/daydrawing.png';
 import bgImgNight from './img/nightdrawing.png';
+import './css/index.css';
 
 const currentTempDegrees = document.querySelector('.current-weather .degrees');
 const locationDisplay = document.querySelector('.location-display .location');
@@ -76,7 +77,7 @@ export function updateDisplayHourly(data) {
 
 export function updateDisplayForecast(data) {
   console.log('🚀 ~ updateDisplayForecast ~ data:', data);
-  const container = document.querySelector('.forecast');
+  const container = document.querySelector('.fc-five-day');
   const temperatureData = data.forecast
     .map((day) => [day.mintemp_c, day.maxtemp_c])
     .flat();
