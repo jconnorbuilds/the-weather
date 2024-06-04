@@ -128,10 +128,40 @@ input[type='text'] {
   justify-content: center;
 }
 
-.five-day-forecast {
+.addl-weather-data {
+  display: grid;
+  height: 100%;
+  gap: 1rem;
+  padding: 1rem 0;
+  grid-template-columns: repeat(3, 1fr);
+
+  .data-card {
+    border-radius: 10px;
+    padding: 0.5rem;
+    border: 1px solid white;
+
+    & > div {
+      padding: 0.5rem;
+    }
+  }
+
+  .uv-index-backdrop {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    border-radius: 10px;
+
+    .uv-index {
+      font-size: 1rem;
+      font-weight: 900;
+    }
+  }
+}
+
+.seven-day-forecast {
   padding: 1rem;
 
-  .fc-five-day {
+  .fc-seven-day {
     display: grid;
     flex-direction: column;
     width: 100%;

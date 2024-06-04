@@ -13,7 +13,7 @@ const loadingSpinner = document.querySelector('#loader');
 // Get the total data from the API
 async function getForecastData(query) {
   const response = await fetch(
-    `${BASE_URL}/forecast.json?key=${API_KEY}&q=${query}&days=5`,
+    `${BASE_URL}/forecast.json?key=${API_KEY}&q=${query}&days=7`,
     {
       mode: 'cors',
     },
@@ -29,7 +29,28 @@ async function processForecastData(data) {
   let processedData = { current: {}, hourly: '', forecast: [], location: {} };
 
   // Get the current conditions to be displayed
-  const keysCurrent = ['condition', 'is_day', 'temp_c', 'temp_f'];
+  const keysCurrent = [
+    'condition',
+    'is_day',
+    'temp_c',
+    'temp_f',
+    'windchill_c',
+    'windchill_f',
+    'humidity',
+    'precip_in',
+    'precip_mm',
+    'pressure_in',
+    'pressure_mb',
+    'uv',
+    'vis_km',
+    'vis_miles',
+    'wind_degree',
+    'wind_dir',
+    'wind_kph',
+    'wind_mph',
+    'gust_kph',
+    'gust_mph',
+  ];
   keysCurrent.forEach((key) => (processedData.current[key] = data.current[key]));
 
   const keysLocation = ['country', 'localtime', 'name'];

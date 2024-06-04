@@ -31,6 +31,10 @@ export function updateDisplayCurrent(data) {
     getConditionIcon(data.current.condition.code, data.current.is_day),
   );
 
+  displayPrecipHumidityPressureData(data.current, true);
+  displayUVVisibilityData(data.current, true);
+  displayWindData(data.current, true);
+
   bgImgWrapper.style.backgroundImage =
     data.current.is_day === 1 ? `url(${bgImgDay})` : `url(${bgImgNight})`;
 }
@@ -57,6 +61,110 @@ function drawHourlyCard(hourData) {
   return card;
 }
 
+export function displayPrecipHumidityPressureData(data, useMetric = true) {
+  const docFragment = document.createDocumentFragment();
+  const container = document.querySelector('.precip-humidity-pressure');
+  const precipitationAmount = useMetric ? data.precip_mm : data.precip_in;
+  const precipitationUnit = useMetric ? 'mm' : 'in.';
+  const humidity = data.humidity;
+  const airPressure = useMetric ? data.pressure_mb : data.pressure_in;
+  const airPressureUnit = useMetric ? 'hPa' : 'inHg';
+
+  container.textContent = '';
+
+  const precipitationDisplay = document.createElement('div');
+  precipitationDisplay.innerHTML += `
+    <div class="precip">
+      <h4><i class="wi wi-raindrop"></i> Precipitiation</h4>
+      
+      ${precipitationAmount} ${precipitationUnit}
+    </div>
+  `;
+
+  const humidityDisplay = document.createElement('div');
+  humidityDisplay.innerHTML = `
+    <div class="humidity">
+      <h4>Humidity</h4>
+      ${humidity}%
+    </div>
+  `;
+
+  const airPressureDisplay = document.createElement('div');
+  airPressureDisplay.innerHTML = `
+    <div class="pressure">
+      <h4>Air pressure</h4>
+      ${airPressure}${airPressureUnit}
+    </div>
+  `;
+
+  docFragment.append(precipitationDisplay, humidityDisplay, airPressureDisplay);
+  container.appendChild(docFragment);
+}
+
+function getUVExposureCategory(uvIndex) {
+  let category;
+
+  if (uvIndex < 0) throw Error("Got a negative UV index...that's not right!");
+  if ([0, 1, 2].includes(uvIndex)) {
+    category = ['Minimal', '#3297a8'];
+  } else if ([3, 4].includes(uvIndex)) {
+    category = ['Low', '#32a87b'];
+  } else if ([5, 6].includes(uvIndex)) {
+    category = ['Moderate', '#e3d94f'];
+  } else if ([7, 8, 9].includes(uvIndex)) {
+    category = ['High', '#e3864f'];
+  } else {
+    category = ['Very High', '#ed3232'];
+  }
+
+  return category;
+}
+
+function displayUVVisibilityData(data, useMetric = true) {
+  const docFragment = document.createDocumentFragment();
+  const container = document.querySelector('.uv-visibility');
+  const uvIndex = data.uv;
+  const visibility = useMetric ? data.vis_km : data.vis_miles;
+  const visibilityUnit = useMetric ? 'km' : 'mi.';
+  const uvExposureCategory = getUVExposureCategory(uvIndex);
+
+  container.textContent = '';
+
+  const uvDisplay = document.createElement('div');
+  uvDisplay.innerHTML += `
+    <div class="uv">
+      <h4>UV Index</h4>
+      <div class="uv-index-backdrop">
+        <div class="uv-index">${uvIndex} - <span class="uv-category">${uvExposureCategory[0]}</span></div>
+        
+      </div>
+    </div>
+  `;
+
+  const visibilityDisplay = document.createElement('div');
+  visibilityDisplay.innerHTML += `
+    <div class="visibility">
+      <h4><i class="fa-regular fa-eye"></i> Visibility</h4>
+      ${visibility} ${visibilityUnit}
+    </div>
+  `;
+
+  docFragment.append(uvDisplay, visibilityDisplay);
+
+  uvDisplay.querySelector('.uv-index-backdrop').style.backgroundColor =
+    uvExposureCategory[1];
+  container.append(docFragment);
+}
+
+export function displayWindData(data, useMetric = true) {
+  const container = document.querySelector('.wind');
+  const windSpeed = useMetric ? data.wind_kph : data.wind_mph;
+  const gustSpeed = useMetric ? data.gust_kph : data.gust_mph;
+  const windUnit = useMetric ? 'kph' : 'mph';
+  const windDirection = data.wind_dir;
+  const windDegrees = data.wind_degree;
+}
+
 export function updateDisplayHourly(data) {
   const hourlyData = data.hourly;
   console.log('🚀 ~ updateDisplayHourly ~ data:', data);
@@ -77,7 +185,7 @@ export function updateDisplayHourly(data) {
 
 export function updateDisplayForecast(data) {
   console.log('🚀 ~ updateDisplayForecast ~ data:', data);
-  const container = document.querySelector('.fc-five-day');
+  const container = document.querySelector('.fc-seven-day');
   const temperatureData = data.forecast
     .map((day) => [day.mintemp_c, day.maxtemp_c])
     .flat();

@@ -14,6 +14,7 @@ module.exports = {
     static: {
       directory: path.join(__dirname, './src/assets'),
     },
+    hot: true,
   },
   module: {
     rules: [
