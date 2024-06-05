@@ -23,6 +23,10 @@ input[type='text'] {
   outline: none;
 }
 
+input[type='checkbox'] {
+  appearance: none;
+}
+
 .main-content {
   z-index: auto;
   height: 100%;
@@ -43,6 +47,9 @@ input[type='text'] {
 }
 
 .top {
+  --slider-height: 1.5em;
+  --slider-inner: calc(var(--slider-height) * 0.8);
+
   display: flex;
   flex-direction: column;
   justify-content: space-between;
@@ -51,6 +58,50 @@ input[type='text'] {
   height: 100%;
   padding: 1em;
   backdrop-filter: blur(8px);
+
+  .nav {
+    display: flex;
+    justify-content: space-between;
+
+    .unit-selector {
+      background-color: #ccc1;
+      border-radius: 10px;
+      padding: 0 1em;
+      display: flex;
+      align-items: center;
+    }
+  }
+
+  input[name='unit-select'] {
+    background-color: #007bff55;
+    border: 1px solid black;
+    margin: 6px;
+    width: calc(var(--slider-height) * 2);
+    height: var(--slider-height);
+    border-radius: calc(var(--slider-height) * 0.42);
+    display: grid;
+    transition: background-color ease-in-out 125ms;
+    place-content: center;
+  }
+
+  input[name='unit-select']:checked {
+    background-color: #007bff99;
+  }
+
+  input[name='unit-select']::before {
+    position: relative;
+    content: '';
+    background-color: #bbb;
+    width: var(--slider-inner);
+    height: var(--slider-inner);
+    border-radius: calc(var(--slider-inner) * 0.4);
+    transition: transform ease-in-out 125ms;
+    transform: translateX(calc(var(--slider-height) * -0.5));
+  }
+
+  input[name='unit-select']:checked::before {
+    transform: translateX(calc(var(--slider-height) * 0.5));
+  }
 
   .fc-today {
     display: flex;
@@ -133,27 +184,61 @@ input[type='text'] {
   height: 100%;
   gap: 1rem;
   padding: 1rem 0;
-  grid-template-columns: repeat(3, 1fr);
+  grid-template-columns: repeat(2, 1fr);
+  font-size: 1.2rem;
 
-  .data-card {
+  .data-container {
+    display: grid;
+    grid-template-rows: repeat(5, min-content);
+    grid-auto-rows: auto;
+    gap: 1rem;
     border-radius: 10px;
     padding: 0.5rem;
-    border: 1px solid white;
+    border: 1px solid #eee;
 
     & > div {
       padding: 0.5rem;
+    }
+
+    .info-card {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
     }
   }
 
   .uv-index-backdrop {
     display: flex;
     justify-content: center;
+    padding: 0 1rem;
     align-items: center;
     border-radius: 10px;
 
     .uv-index {
       font-size: 1rem;
       font-weight: 900;
+    }
+  }
+
+  .wind {
+    .info-card {
+      /* background-color: yellow; */
+    }
+
+    .direction {
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+    }
+
+    .arrow {
+      display: inline-block;
+    }
+
+    .arrow i {
+      display: inline-block;
+      font-size: 2.5rem;
+      animation: 2s ease-in-out alternate infinite windy;
     }
   }
 }

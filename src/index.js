@@ -13,7 +13,7 @@ const loadingSpinner = document.querySelector('#loader');
 // Get the total data from the API
 async function getForecastData(query) {
   const response = await fetch(
-    `${BASE_URL}/forecast.json?key=${API_KEY}&q=${query}&days=7`,
+    `${BASE_URL}/forecast.json?key=${API_KEY}&q=${query}&days=8`,
     {
       mode: 'cors',
     },
@@ -67,6 +67,7 @@ async function processForecastData(data) {
 
   // Get the parameters to be used in the forecast display
   const forecastDays = data.forecast.forecastday;
+  data.forecast.forecastday.shift(); // don't need the first day ('today') in the data
   forecastDays.forEach((day) => {
     let forecastData = {};
     forecastData.date = day.date;

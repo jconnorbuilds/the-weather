@@ -17,6 +17,11 @@
             <form id="location-search" action="">
               <input name="location" type="text" placeholder="Search..." />
             </form>
+            <div class="unit-selector">
+              <label for="unit-select">C</label>
+              <input id="unit-select" name="unit-select" type="checkbox" />
+              <label for="unit-select">F</label>
+            </div>
           </div>
           <div class="fc-today">
             <div class="fc-current weather-card deg-c">
@@ -46,13 +51,8 @@
       </div>
       <div class="middle">
         <div class="addl-weather-data">
-          <div class="precip-humidity-pressure data-card"></div>
-          <div class="uv-visibility data-card"></div>
-          <div class="wind data-card">
-            <div class="wind-speed">wind speed</div>
-            <div class="gust-speed">gust speed</div>
-            <div class="wind-direction">Wind direction</div>
-          </div>
+          <div class="area1 data-container"></div>
+          <div class="wind data-container"></div>
         </div>
         <div class="seven-day-forecast">
           <h3>7-day forecast</h3>
