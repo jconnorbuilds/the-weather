@@ -4,7 +4,28 @@ import bgImgDay from './img/daydrawing.png';
 import bgImgNight from './img/nightdrawing.png';
 import './css/index.css';
 
-const currentUnit = 'c';
+let cachedData;
+
+const unitSwitcher = document.querySelector('#unit-switch');
+unitSwitcher.addEventListener('change', (e) => {
+  const useMetric = toggleUnits(e.target.checked);
+  localStorage.setItem('useMetric', useMetric);
+  updateDisplay(cachedData, useMetric);
+});
+
+export function cacheData(data) {
+  cachedData = data;
+}
+
+export function getOrSetUseMetric() {
+  let useMetric = JSON.parse(localStorage.getItem('useMetric'));
+  if (useMetric === null) useMetric = true;
+  return useMetric;
+}
+
+function toggleUnits(useMetric) {
+  return useMetric;
+}
 
 function getConditionIcon(code, isDay = 1) {
   let icon = document.createElement('i');
@@ -13,33 +34,21 @@ function getConditionIcon(code, isDay = 1) {
   return icon;
 }
 
-export function updateDisplayCurrent(data) {
+function updateDisplayCurrent(data, useMetric) {
   const bgImgWrapper = document.querySelector('.top-wrapper');
-  const currentTempDegrees = document.querySelector('.current-weather .degrees');
-  const locationDisplay = document.querySelector('.location-display .location');
-  const todayLoTemp = document.querySelector('.current-temp-range .lo-temp .degrees');
-  const todayHiTemp = document.querySelector('.current-temp-range .hi-temp .degrees');
-  console.log('🚀 ~ updateDisplayCurrent ~ data:', data);
-  currentTempDegrees.textContent = `${data.current.temp_c}°`;
-  todayLoTemp.textContent = `L: ${data.forecast[0].mintemp_c}°`;
-  todayHiTemp.textContent = `H: ${data.forecast[0].maxtemp_c}°`;
-  locationDisplay.textContent = `${data.location.name}, ${data.location.country}`;
 
-  const iconContainer = document.querySelector('.weather-card .condition-icon');
-  iconContainer.querySelector('i')?.remove();
-  iconContainer.append(
-    getConditionIcon(data.current.condition.code, data.current.is_day),
-  );
-
-  displayAddlWeatherData(data.current, true);
-  displayWindData(data.current, true);
+  displayCurrentWeatherBasicData(data, useMetric);
+  displayAddlWeatherData(data.current, useMetric);
+  displayWindData(data.current, useMetric);
 
   bgImgWrapper.style.backgroundImage =
     data.current.is_day === 1 ? `url(${bgImgDay})` : `url(${bgImgNight})`;
 }
 
-function drawHourlyCard(hourData) {
+function drawHourlyCard(hourData, useMetric) {
   const card = document.createElement('div');
+  const temperature = useMetric ? hourData.temp_c : hourData.temp_f;
+
   card.classList.add('hr', 'card');
   card.innerHTML = `
     <div class="time">${new Date(hourData.time).toLocaleTimeString('en-US', {
@@ -49,19 +58,44 @@ function drawHourlyCard(hourData) {
       ${getConditionIcon(hourData.condition.code, hourData.is_day).outerHTML}
     </div>
     <div class="hr-temp">
-      <span class="temp">${hourData.temp_c}°</span>
+      <span class="temp">${temperature}°</span>
     </div>
     <div class="precip-chance">
       <i class="wi wi-raindrop"></i>
       <span>${Math.max(hourData.chance_of_rain, hourData.chance_of_snow)}%</span>
     </div>
-    
     `;
+
   return card;
 }
 
-function displayAddlWeatherData(data, useMetric = true) {
-  const docFragment = document.createDocumentFragment();
+function displayCurrentWeatherBasicData(data, useMetric) {
+  const currentTempDegrees = document.querySelector('.current-weather .degrees');
+  const locationDisplay = document.querySelector('.location-display .location');
+  const loTempDisplay = document.querySelector('.current-temp-range .lo-temp .degrees');
+  const todayHiTempDisplay = document.querySelector(
+    '.current-temp-range .hi-temp .degrees',
+  );
+
+  console.log(useMetric);
+  const currentTemp = useMetric ? data.current.temp_c : data.current.temp_f;
+  const loTemp = useMetric ? data.forecast[0].mintemp_c : data.forecast[0].mintemp_f;
+  const hiTemp = useMetric ? data.forecast[0].maxtemp_c : data.forecast[0].maxtemp_f;
+
+  currentTempDegrees.textContent = `${currentTemp}°`;
+  loTempDisplay.textContent = `L: ${loTemp}°`;
+  todayHiTempDisplay.textContent = `H: ${hiTemp}°`;
+  locationDisplay.textContent = `${data.location.name}, ${data.location.country}`;
+
+  const iconContainer = document.querySelector('.weather-card .condition-icon');
+  iconContainer.querySelector('i')?.remove();
+  iconContainer.append(
+    getConditionIcon(data.current.condition.code, data.current.is_day),
+  );
+}
+
+function displayAddlWeatherData(data, useMetric) {
+  const fragment = document.createDocumentFragment();
   const container = document.querySelector('.area1');
   const precipitationAmount = useMetric ? data.precip_mm : data.precip_in;
   const precipitationUnit = useMetric ? 'mm' : 'in.';
@@ -117,14 +151,14 @@ function displayAddlWeatherData(data, useMetric = true) {
   uvDisplay.querySelector('.uv-index-backdrop').style.backgroundColor =
     uvExposureCategory.color;
 
-  docFragment.append(
+  fragment.append(
     precipitationDisplay,
     humidityDisplay,
     airPressureDisplay,
     uvDisplay,
     visibilityDisplay,
   );
-  container.appendChild(docFragment);
+  container.appendChild(fragment);
 }
 
 function getUVExposureCategory(uvIndex) {
@@ -146,8 +180,8 @@ function getUVExposureCategory(uvIndex) {
   return category;
 }
 
-export function displayWindData(data, useMetric = true) {
-  const docFragment = document.createDocumentFragment();
+function displayWindData(data, useMetric) {
+  const fragment = document.createDocumentFragment();
   const container = document.querySelector('.wind');
   const windSpeed = useMetric ? data.wind_kph : data.wind_mph;
   const gustSpeed = useMetric ? data.gust_kph : data.gust_mph;
@@ -181,13 +215,13 @@ export function displayWindData(data, useMetric = true) {
     </div>
   `;
 
-  docFragment.append(windSpeedDisplay, gustSpeedDisplay, windDirectionDisplay);
-  container.appendChild(docFragment);
+  fragment.append(windSpeedDisplay, gustSpeedDisplay, windDirectionDisplay);
+  container.appendChild(fragment);
 }
 
-export function updateDisplayHourly(data) {
+function updateDisplayHourly(data, useMetric) {
   const hourlyData = data.hourly;
-  console.log('🚀 ~ updateDisplayHourly ~ data:', data);
+  const fragment = document.createDocumentFragment();
   const container = document.querySelector('.fc-hourly');
   container.textContent = '';
 
@@ -198,25 +232,22 @@ export function updateDisplayHourly(data) {
   ];
 
   sortedData.forEach((hour) => {
-    const card = drawHourlyCard(hour);
-    container.append(card);
+    fragment.appendChild(drawHourlyCard(hour, useMetric));
   });
+
+  container.append(fragment);
 }
 
-export function updateDisplayForecast(data) {
-  console.log('🚀 ~ updateDisplayForecast ~ data:', data);
-  const container = document.querySelector('.fc-seven-day');
-  const temperatureData = data.forecast
-    .map((day) => [day.mintemp_c, day.maxtemp_c])
-    .flat();
+function getForecastDayDisplay(day, tempBarData, useMetric) {
+  const dayContainer = document.createElement('div');
+  const loTemp = useMetric ? day.mintemp_c : day.mintemp_f;
+  const hiTemp = useMetric ? day.maxtemp_c : day.maxtemp_f;
 
-  container.innerHTML = '';
-  data.forecast.forEach((day) => {
-    const date = new Date(day.date);
+  dayContainer.classList.add('day');
+  const date = new Date(day.date);
 
-    container.innerHTML += `
-    <div class="day">
-      <div class="date">
+  dayContainer.innerHTML = `
+    <div class="date">
         <div class="weekday">${date.toLocaleDateString('en-US', {
           weekday: 'short',
         })}</div>
@@ -229,14 +260,36 @@ export function updateDisplayForecast(data) {
         ${getConditionIcon(day.condition.code).outerHTML}
       </span>
       <div class="temperature lo-temp">
-        L: ${day.mintemp_c}°
+        L: ${loTemp}°
       </div>
-      ${new TemperatureBar(temperatureData, day.mintemp_c, day.maxtemp_c).draw()}
+      ${new TemperatureBar(tempBarData, day.mintemp_c, day.maxtemp_c).draw()}
       <div class="temperature hi-temp">
-        H: ${day.maxtemp_c}°
+        H: ${hiTemp}°
       </div>
-      </div>
-    </div>
     `;
+
+  return dayContainer;
+}
+
+function updateDisplayForecast(data, useMetric) {
+  const container = document.querySelector('.fc-seven-day');
+  const fragment = document.createDocumentFragment();
+  const temperatureBarData = data.forecast
+    .map((day) => [day.mintemp_c, day.maxtemp_c])
+    .flat();
+
+  container.innerHTML = '';
+  data.forecast.forEach((day) => {
+    fragment.appendChild(getForecastDayDisplay(day, temperatureBarData, useMetric));
   });
+
+  container.appendChild(fragment);
+}
+
+export default function updateDisplay(cleanData, useMetric) {
+  unitSwitcher.checked = useMetric;
+  console.log(useMetric);
+  updateDisplayCurrent(cleanData, useMetric);
+  updateDisplayHourly(cleanData, useMetric);
+  updateDisplayForecast(cleanData, useMetric);
 }

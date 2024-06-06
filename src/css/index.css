@@ -63,7 +63,7 @@ input[type='checkbox'] {
     display: flex;
     justify-content: space-between;
 
-    .unit-selector {
+    .unit-switcher {
       background-color: #ccc1;
       border-radius: 10px;
       padding: 0 1em;
@@ -72,8 +72,8 @@ input[type='checkbox'] {
     }
   }
 
-  input[name='unit-select'] {
-    background-color: #007bff55;
+  input[name='unit-switch'] {
+    background-color: #007bff99;
     border: 1px solid black;
     margin: 6px;
     width: calc(var(--slider-height) * 2);
@@ -84,11 +84,11 @@ input[type='checkbox'] {
     place-content: center;
   }
 
-  input[name='unit-select']:checked {
-    background-color: #007bff99;
+  input[name='unit-switch']:checked {
+    background-color: #007bff55;
   }
 
-  input[name='unit-select']::before {
+  input[name='unit-switch']::before {
     position: relative;
     content: '';
     background-color: #bbb;
@@ -96,17 +96,17 @@ input[type='checkbox'] {
     height: var(--slider-inner);
     border-radius: calc(var(--slider-inner) * 0.4);
     transition: transform ease-in-out 125ms;
-    transform: translateX(calc(var(--slider-height) * -0.5));
-  }
-
-  input[name='unit-select']:checked::before {
     transform: translateX(calc(var(--slider-height) * 0.5));
   }
 
+  input[name='unit-switch']:checked::before {
+    transform: translateX(calc(var(--slider-height) * -0.5));
+  }
+
   .fc-today {
-    display: flex;
+    display: grid;
+    grid-template-columns: 1fr 3fr;
     gap: 2rem;
-    flex-direction: row;
 
     .fc-current {
       display: flex;
@@ -137,7 +137,10 @@ input[type='checkbox'] {
 
   .fc-hourly {
     grid-column: 2;
-    display: flex;
+    display: grid;
+    grid-template-columns: 155px;
+    grid-auto-columns: 155px;
+    grid-auto-flow: column;
     gap: 1em;
     max-height: max-content;
     overflow: auto;
@@ -147,7 +150,6 @@ input[type='checkbox'] {
       display: flex;
       flex-direction: column;
       align-items: center;
-      flex: 1 0 initial;
       white-space: nowrap;
       padding: 0.5rem 2rem;
       border-radius: 10px;
@@ -159,7 +161,7 @@ input[type='checkbox'] {
       }
 
       .hr-temp .temp {
-        font-size: 1.5rem;
+        font-size: 1.65rem;
       }
 
       .precip-chance {

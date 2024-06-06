@@ -1,9 +1,5 @@
 import './css/index.css';
-import {
-  updateDisplayCurrent,
-  updateDisplayHourly,
-  updateDisplayForecast,
-} from './ui.js';
+import updateDisplay, { cacheData, getOrSetUseMetric } from './updateDisplay.js';
 
 const API_KEY = '35c70887ef254533935103759241405';
 const BASE_URL = 'http://api.weatherapi.com/v1';
@@ -86,9 +82,10 @@ async function getAndDisplayWeather(query) {
     const forecastData = await getForecastData(query);
     const cleanData = await processForecastData(forecastData);
 
-    updateDisplayCurrent(cleanData);
-    updateDisplayHourly(cleanData);
-    updateDisplayForecast(cleanData);
+    const useMetric = getOrSetUseMetric();
+    console.log(useMetric);
+    updateDisplay(cleanData, useMetric);
+    cacheData(cleanData, useMetric);
 
     loadingSpinner.classList.add('hidden');
   } catch (error) {
