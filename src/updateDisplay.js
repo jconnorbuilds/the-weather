@@ -1,30 +1,29 @@
 import { TemperatureBar } from './TemperatureBar';
 import { WEATHER_ICON_CLASSES } from './WEATHER_ICON_CLASSES';
-import bgImgDay from './img/daydrawing.png';
-import bgImgNight from './img/nightdrawing.png';
+import bgImgDay from './img/daydrawing.jpg';
+import bgImgNight from './img/nightdrawing.jpg';
 import './css/index.css';
 
+let useMetric;
 let cachedData;
 
 const unitSwitcher = document.querySelector('#unit-switch');
-unitSwitcher.addEventListener('change', (e) => {
-  const useMetric = toggleUnits(e.target.checked);
-  localStorage.setItem('useMetric', useMetric);
-  updateDisplay(cachedData, useMetric);
-});
+unitSwitcher.addEventListener('change', toggleUnits);
 
 export function cacheData(data) {
   cachedData = data;
 }
 
-export function getOrSetUseMetric() {
-  let useMetric = JSON.parse(localStorage.getItem('useMetric'));
+export function getUseMetric() {
+  useMetric = JSON.parse(localStorage.getItem('useMetric'));
   if (useMetric === null) useMetric = true;
   return useMetric;
 }
 
-function toggleUnits(useMetric) {
-  return useMetric;
+function toggleUnits(e) {
+  useMetric = e.target.checked;
+  localStorage.setItem('useMetric', useMetric);
+  updateDisplay(cachedData, useMetric);
 }
 
 function getConditionIcon(code, isDay = 1) {
@@ -34,18 +33,18 @@ function getConditionIcon(code, isDay = 1) {
   return icon;
 }
 
-function updateDisplayCurrent(data, useMetric) {
+function updateDisplayCurrent(data) {
   const bgImgWrapper = document.querySelector('.top-wrapper');
 
-  displayCurrentWeatherBasicData(data, useMetric);
-  displayAddlWeatherData(data.current, useMetric);
-  displayWindData(data.current, useMetric);
+  displayCurrentWeatherBasicData(data);
+  displayAddlWeatherData(data.current);
+  displayWindData(data.current);
 
   bgImgWrapper.style.backgroundImage =
     data.current.is_day === 1 ? `url(${bgImgDay})` : `url(${bgImgNight})`;
 }
 
-function drawHourlyCard(hourData, useMetric) {
+function drawHourlyCard(hourData) {
   const card = document.createElement('div');
   const temperature = useMetric ? hourData.temp_c : hourData.temp_f;
 
@@ -69,7 +68,7 @@ function drawHourlyCard(hourData, useMetric) {
   return card;
 }
 
-function displayCurrentWeatherBasicData(data, useMetric) {
+function displayCurrentWeatherBasicData(data) {
   const currentTempDegrees = document.querySelector('.current-weather .degrees');
   const locationDisplay = document.querySelector('.location-display .location');
   const loTempDisplay = document.querySelector('.current-temp-range .lo-temp .degrees');
@@ -77,7 +76,6 @@ function displayCurrentWeatherBasicData(data, useMetric) {
     '.current-temp-range .hi-temp .degrees',
   );
 
-  console.log(useMetric);
   const currentTemp = useMetric ? data.current.temp_c : data.current.temp_f;
   const loTemp = useMetric ? data.forecast[0].mintemp_c : data.forecast[0].mintemp_f;
   const hiTemp = useMetric ? data.forecast[0].maxtemp_c : data.forecast[0].maxtemp_f;
@@ -94,9 +92,9 @@ function displayCurrentWeatherBasicData(data, useMetric) {
   );
 }
 
-function displayAddlWeatherData(data, useMetric) {
+function displayAddlWeatherData(data) {
   const fragment = document.createDocumentFragment();
-  const container = document.querySelector('.area1');
+  const container = document.querySelector('.addl-data');
   const precipitationAmount = useMetric ? data.precip_mm : data.precip_in;
   const precipitationUnit = useMetric ? 'mm' : 'in.';
   const humidity = data.humidity;
@@ -112,29 +110,29 @@ function displayAddlWeatherData(data, useMetric) {
   const precipitationDisplay = document.createElement('div');
   precipitationDisplay.classList.add('precip', 'info-card');
   precipitationDisplay.innerHTML += `
-      <h4 class="info-name"><i class="wi wi-raindrop"></i> Precipitiation</h4>
-      <span class="info-value">${precipitationAmount}${precipitationUnit}</span>
+      <h4>Precipitiation</h4>
+      <span>${precipitationAmount}${precipitationUnit}</span>
 
   `;
 
   const humidityDisplay = document.createElement('div');
   humidityDisplay.classList.add('humidity', 'info-card');
   humidityDisplay.innerHTML = `
-    <h4 class="info-name">Humidity</h4>
-    <span class="info-value">${humidity}%</span>
+    <h4>Humidity</h4>
+    <span>${humidity}%</span>
   `;
 
   const airPressureDisplay = document.createElement('div');
   airPressureDisplay.classList.add('pressure', 'info-card');
   airPressureDisplay.innerHTML = `
-    <h4 class="info-name">Air pressure</h4>
-    <span class="info-value">${airPressure}${airPressureUnit}</span>
+    <h4>Air pressure</h4>
+    <span>${airPressure}${airPressureUnit}</span>
   `;
 
   const uvDisplay = document.createElement('div');
   uvDisplay.classList.add('uv', 'info-card');
   uvDisplay.innerHTML += `
-    <h4 class="info-name">UV Index</h4>
+    <h4>UV Index</h4>
     <div class="uv-index-backdrop info-value">
       <div class="uv-index">${uvIndex} - <span class="uv-category">${uvExposureCategory.category}</span></div>
     </div>
@@ -143,8 +141,8 @@ function displayAddlWeatherData(data, useMetric) {
   const visibilityDisplay = document.createElement('div');
   visibilityDisplay.classList.add('visibility', 'info-card');
   visibilityDisplay.innerHTML += `
-    <h4 class="info-name"><i class="fa-regular fa-eye"></i> Visibility</h4>
-    <span class="info-value">${visibility}${visibilityUnit}</span>
+    <h4> Visibility</h4>
+    <span>${visibility}${visibilityUnit}</span>
 
   `;
 
@@ -180,7 +178,7 @@ function getUVExposureCategory(uvIndex) {
   return category;
 }
 
-function displayWindData(data, useMetric) {
+function displayWindData(data) {
   const fragment = document.createDocumentFragment();
   const container = document.querySelector('.wind');
   const windSpeed = useMetric ? data.wind_kph : data.wind_mph;
@@ -219,7 +217,7 @@ function displayWindData(data, useMetric) {
   container.appendChild(fragment);
 }
 
-function updateDisplayHourly(data, useMetric) {
+function updateDisplayHourly(data) {
   const hourlyData = data.hourly;
   const fragment = document.createDocumentFragment();
   const container = document.querySelector('.fc-hourly');
@@ -232,13 +230,13 @@ function updateDisplayHourly(data, useMetric) {
   ];
 
   sortedData.forEach((hour) => {
-    fragment.appendChild(drawHourlyCard(hour, useMetric));
+    fragment.appendChild(drawHourlyCard(hour));
   });
 
   container.append(fragment);
 }
 
-function getForecastDayDisplay(day, tempBarData, useMetric) {
+function getForecastDayDisplay(day, tempBarData) {
   const dayContainer = document.createElement('div');
   const loTemp = useMetric ? day.mintemp_c : day.mintemp_f;
   const hiTemp = useMetric ? day.maxtemp_c : day.maxtemp_f;
@@ -271,7 +269,7 @@ function getForecastDayDisplay(day, tempBarData, useMetric) {
   return dayContainer;
 }
 
-function updateDisplayForecast(data, useMetric) {
+function updateDisplayForecast(data) {
   const container = document.querySelector('.fc-seven-day');
   const fragment = document.createDocumentFragment();
   const temperatureBarData = data.forecast
@@ -280,16 +278,15 @@ function updateDisplayForecast(data, useMetric) {
 
   container.innerHTML = '';
   data.forecast.forEach((day) => {
-    fragment.appendChild(getForecastDayDisplay(day, temperatureBarData, useMetric));
+    fragment.appendChild(getForecastDayDisplay(day, temperatureBarData));
   });
 
   container.appendChild(fragment);
 }
 
-export default function updateDisplay(cleanData, useMetric) {
+export default function updateDisplay(cleanData) {
   unitSwitcher.checked = useMetric;
-  console.log(useMetric);
-  updateDisplayCurrent(cleanData, useMetric);
-  updateDisplayHourly(cleanData, useMetric);
-  updateDisplayForecast(cleanData, useMetric);
+  updateDisplayCurrent(cleanData);
+  updateDisplayHourly(cleanData);
+  updateDisplayForecast(cleanData);
 }

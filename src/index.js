@@ -1,5 +1,5 @@
 import './css/index.css';
-import updateDisplay, { cacheData, getOrSetUseMetric } from './updateDisplay.js';
+import updateDisplay, { cacheData, getUseMetric } from './updateDisplay.js';
 
 const API_KEY = '35c70887ef254533935103759241405';
 const BASE_URL = 'http://api.weatherapi.com/v1';
@@ -16,50 +16,60 @@ async function getForecastData(query) {
   );
 
   const allForecastData = await response.json();
-  console.log('🚀 ~ getForecastData ~ allForecastData:', allForecastData);
-  return allForecastData;
+  if (!allForecastData.error) return allForecastData;
+
+  if ([1002, 1003, 1005, 1006, 9001].includes(allForecastData.error.code)) {
+    throw new Error(allForecastData.error.message);
+  } else if ([2006, 2007, 2008].includes(allForecastData.error.code)) {
+    throw new Error(
+      'API Key error. Either the API key is invalid, disabled, or has exceeded the call quota.',
+    );
+  } else {
+    throw new Error("An error occured, the weather data couldn't be retrieved.");
+  }
 }
+
+const keysCurrent = [
+  'condition',
+  'is_day',
+  'temp_c',
+  'temp_f',
+  'windchill_c',
+  'windchill_f',
+  'humidity',
+  'precip_in',
+  'precip_mm',
+  'pressure_in',
+  'pressure_mb',
+  'uv',
+  'vis_km',
+  'vis_miles',
+  'wind_degree',
+  'wind_dir',
+  'wind_kph',
+  'wind_mph',
+  'gust_kph',
+  'gust_mph',
+];
+
+const keysForecast = [
+  'mintemp_c',
+  'mintemp_f',
+  'maxtemp_c',
+  'maxtemp_f',
+  'daily_chance_of_rain',
+  'condition',
+];
+
+const keysLocation = ['country', 'localtime', 'name'];
 
 // Process the data to retrieve what needs to be displayed
 async function processForecastData(data) {
   let processedData = { current: {}, hourly: '', forecast: [], location: {} };
 
   // Get the current conditions to be displayed
-  const keysCurrent = [
-    'condition',
-    'is_day',
-    'temp_c',
-    'temp_f',
-    'windchill_c',
-    'windchill_f',
-    'humidity',
-    'precip_in',
-    'precip_mm',
-    'pressure_in',
-    'pressure_mb',
-    'uv',
-    'vis_km',
-    'vis_miles',
-    'wind_degree',
-    'wind_dir',
-    'wind_kph',
-    'wind_mph',
-    'gust_kph',
-    'gust_mph',
-  ];
   keysCurrent.forEach((key) => (processedData.current[key] = data.current[key]));
-
-  const keysLocation = ['country', 'localtime', 'name'];
   keysLocation.forEach((key) => (processedData.location[key] = data.location[key]));
-
-  const keysForecast = [
-    'mintemp_c',
-    'mintemp_f',
-    'maxtemp_c',
-    'maxtemp_f',
-    'daily_chance_of_rain',
-    'condition',
-  ];
 
   // Get the parameters to be used in the forecast display
   const forecastDays = data.forecast.forecastday;
@@ -77,26 +87,49 @@ async function processForecastData(data) {
 }
 
 async function getAndDisplayWeather(query) {
+  getUseMetric();
   try {
     loadingSpinner.classList.remove('hidden');
     const forecastData = await getForecastData(query);
     const cleanData = await processForecastData(forecastData);
 
-    const useMetric = getOrSetUseMetric();
-    console.log(useMetric);
-    updateDisplay(cleanData, useMetric);
-    cacheData(cleanData, useMetric);
-
-    loadingSpinner.classList.add('hidden');
+    updateDisplay(cleanData);
+    cacheData(cleanData);
   } catch (error) {
     console.error('Error getting the data...!', error);
+    const errMessage = document.querySelector('.top .error-message');
+    errMessage.textContent = error.message;
+  } finally {
+    loadingSpinner.classList.add('hidden');
   }
 }
 
-locationSearch.addEventListener('submit', async (e) => {
+function init() {
+  loadingSpinner.classList.remove('hidden');
+  navigator.geolocation.getCurrentPosition(
+    (position) => {
+      const { latitude, longitude } = position.coords;
+      getAndDisplayWeather(`${latitude},${longitude}`);
+    },
+    () => getAndDisplayWeather(`Tokyo, Japan`),
+  );
+}
+
+function initError() {
+  getAndDisplayWeather(`zxcvcxvzxcv`);
+}
+
+async function search(e) {
   e.preventDefault();
   const locationField = e.target.elements.location;
   getAndDisplayWeather(locationField.value);
-});
 
-getAndDisplayWeather('Yonezawa');
+  // reset and remove focus from the search field
+  e.target.reset();
+  locationField.blur();
+}
+
+locationSearch.addEventListener('submit', search);
+
+init();
+// initError();

@@ -70,6 +70,15 @@ input[type='checkbox'] {
       display: flex;
       align-items: center;
     }
+
+    .error-message {
+      color: #900;
+      margin: 0.5rem 0;
+      padding: 0 0.5rem;
+      font-weight: 500;
+      border-radius: 10px;
+      background-color: #ccc5;
+    }
   }
 
   input[name='unit-switch'] {
@@ -191,9 +200,10 @@ input[type='checkbox'] {
 
   .data-container {
     display: grid;
+    min-width: max-content;
     grid-template-rows: repeat(5, min-content);
     grid-auto-rows: auto;
-    gap: 1rem;
+    gap: 1rem 1rem;
     border-radius: 10px;
     padding: 0.5rem;
     border: 1px solid #eee;
@@ -204,6 +214,7 @@ input[type='checkbox'] {
 
     .info-card {
       display: flex;
+      gap: 1ch;
       align-items: center;
       justify-content: space-between;
     }
@@ -223,10 +234,6 @@ input[type='checkbox'] {
   }
 
   .wind {
-    .info-card {
-      /* background-color: yellow; */
-    }
-
     .direction {
       display: flex;
       align-items: center;

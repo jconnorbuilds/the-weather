@@ -12,11 +12,15 @@
   <body>
     <div class="main-content">
       <div class="top-wrapper">
-        <div class="top">
+        <section class="top">
           <div class="nav">
-            <form id="location-search" action="">
-              <input name="location" type="text" placeholder="Search..." />
-            </form>
+            <div class="search-bar">
+              <form id="location-search" action="">
+                <input name="location" type="text" placeholder="Search..." />
+              </form>
+              <p class="error-message"></p>
+            </div>
+
             <div class="unit-switcher">
               <label for="unit-switch">°C</label>
               <input id="unit-switch" name="unit-switch" type="checkbox" />
@@ -47,18 +51,18 @@
             </div>
             <div class="fc-hourly"></div>
           </div>
-        </div>
+        </section>
       </div>
-      <div class="middle">
+      <section class="middle">
         <div class="addl-weather-data">
-          <div class="area1 data-container"></div>
+          <div class="addl-data data-container"></div>
           <div class="wind data-container"></div>
         </div>
         <div class="seven-day-forecast">
           <h3>7-day forecast</h3>
           <div class="fc-seven-day"></div>
         </div>
-      </div>
+      </section>
     </div>
     <div id="loader" class="hidden">
       <span class="text">Getting the weather...</span>
