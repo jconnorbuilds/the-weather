@@ -115,10 +115,6 @@ function init() {
   );
 }
 
-function initError() {
-  getAndDisplayWeather(`zxcvcxvzxcv`);
-}
-
 async function search(e) {
   e.preventDefault();
   const locationField = e.target.elements.location;
@@ -132,4 +128,3 @@ async function search(e) {
 locationSearch.addEventListener('submit', search);
 
 init();
-// initError();
