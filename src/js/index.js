@@ -1,4 +1,4 @@
-import './css/index.css';
+import '../styles/index.css';
 import updateDisplay, { cacheData, getUseMetric } from './updateDisplay.js';
 
 const API_KEY = '35c70887ef254533935103759241405';

@@ -1,8 +1,8 @@
 import { TemperatureBar } from './TemperatureBar';
 import { WEATHER_ICON_CLASSES } from './WEATHER_ICON_CLASSES';
-import bgImgDay from './img/daydrawing.jpg';
-import bgImgNight from './img/nightdrawing.jpg';
-import './css/index.css';
+import bgImgDay from '../img/daydrawing.webp';
+import bgImgNight from '../img/nightdrawing.webp';
+import '../styles/index.css';
 
 let useMetric;
 let cachedData;
