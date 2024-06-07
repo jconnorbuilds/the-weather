@@ -1,34 +1,21 @@
 const path = require('path');
+const { merge } = require('webpack-merge');
+const common = require('./webpack.common.js');
 const HTMLWebpackPlugin = require('html-webpack-plugin');
 const StylelintPlugin = require('stylelint-webpack-plugin');
 
-module.exports = {
+module.exports = merge(common, {
   mode: 'development',
-  entry: './src/index.js',
-  output: {
-    path: path.resolve(__dirname, 'dist'),
-    filename: 'bundle.js',
-  },
-  devtool: 'eval-source-map',
   devServer: {
     static: {
       directory: path.join(__dirname, './src/assets'),
     },
-    hot: true,
   },
   module: {
     rules: [
       {
         test: /\.s?css/,
         use: ['style-loader', 'css-loader', 'postcss-loader'],
-      },
-      {
-        test: /\.(png|svg|jpg|jpeg|gif)$/i,
-        type: 'asset/resource',
-      },
-      {
-        test: /\.(woff|woff2|eot|ttf|otf)$/i,
-        type: 'asset/resource',
       },
     ],
   },
@@ -38,4 +25,4 @@ module.exports = {
     }),
     new StylelintPlugin({ exclude: ['**/weather-icons**'] }),
   ],
-};
+});
