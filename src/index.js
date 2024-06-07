@@ -2,7 +2,7 @@ import './css/index.css';
 import updateDisplay, { cacheData, getUseMetric } from './updateDisplay.js';
 
 const API_KEY = '35c70887ef254533935103759241405';
-const BASE_URL = 'http://api.weatherapi.com/v1';
+const BASE_URL = 'https://api.weatherapi.com/v1';
 const locationSearch = document.querySelector('form#location-search');
 const loadingSpinner = document.querySelector('#loader');
 
